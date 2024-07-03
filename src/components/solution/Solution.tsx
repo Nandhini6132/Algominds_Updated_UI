@@ -51,7 +51,7 @@ const Solution = () => {
       <div className="flex flex-col gap-10">
         {solutions?.map((sol: SolutionType, i) => {
           return (
-            <div>
+            <div key={i}>
               <div className="flex flex-col gap-1 cursor-pointer" onClick={() => setSingleSolution(sol?.userId)}>
                 <div className="flex gap-2">
                   <Avatar

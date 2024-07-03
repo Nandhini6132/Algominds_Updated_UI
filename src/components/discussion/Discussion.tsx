@@ -59,7 +59,7 @@ const Discussion = () => {
       <div className="flex flex-col gap-5">
         {discussions && discussions.length > 0 ? (
           discussions.map((disc: DiscussionData, index) => (
-            <div>
+            <div key={index}>
              <div className="flex items-center gap-3"> <Avatar/> <p>{disc.userName}</p></div>
             <h3 key={index} className="ml-12">{disc.discussion}</h3>
             <div><hr/></div>

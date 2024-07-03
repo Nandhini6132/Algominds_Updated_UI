@@ -110,7 +110,7 @@ const ProfilePage = () => {
               <div className="flex flex-col gap-5">
                 {menus.map((a: any, i: number) => {
                   return (
-                    <div
+                    <div key={i}
                       className="flex gap-4 cursor-pointer"
                       onClick={() => setProfileComponent(a.name)}
                     >

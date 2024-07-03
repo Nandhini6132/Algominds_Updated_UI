@@ -101,7 +101,7 @@ const MainHeader = () => {
                 <>
                   <div className="flex gap-8" key={i}>
                     {name?.navigation?.map((link, i) => (
-                      <Link href={link?.url}>{link?.name}</Link>
+                      <Link href={link?.url} key={i}>{link?.name}</Link>
                     ))}
                     {isAdmin && (
                       <button onClick={handleOpen}>Add question</button>
@@ -118,7 +118,7 @@ const MainHeader = () => {
             <>
               <div className="flex gap-7">
                 {name.profileNavigation?.map((name, i) => (
-                  <Link
+                  <Link key={i}
                     href={`${name.url}`}
                     onClick={(e) => name.url === "/sign-out" && handleLogout(e)}
                   >

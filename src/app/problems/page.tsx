@@ -77,7 +77,7 @@ const ProblemPage = () => {
       <div className="flex gap-6 mb-7">
          {options.map(({ category, count })=>{
           return (
-         <Link href={''}> <div className="flex gap-1 cursor-pointer" onClick={()=>handleSetCategory(category)}>
+         <Link href={''} key={count}> <div className="flex gap-1 cursor-pointer" onClick={()=>handleSetCategory(category)}>
          <div className="hover:text-blue-500 ">{`${category.charAt(0).toUpperCase()}${category.slice(1)}`}</div>
          <span className="bg-gray-200 px-2 text-sm rounded-xl flex items-center">{`${count}`}</span>
        </div></Link>
