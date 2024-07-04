@@ -252,7 +252,7 @@ function ProblemId() {
   console.log(output1, output2, output3);
   
 
-const {slug}=params
+
 
   return (
     <main className="mt-2 border-y-4">
@@ -419,10 +419,10 @@ const {slug}=params
 
 export default ProblemId;
 
-export async function generateStaticParams() {
-  const posts = await fetch(`https:/localhost:3000/problems?id=${slug}`).then((res) => res.json())
+// export async function generateStaticParams() {
+//   const posts = await fetch(`https:/localhost:3000/problems/${slug}`).then((res) => res.json())
  
-  return posts.map((post) => ({
-    slug: post.slug,
-  }))
-}
+//   return posts.map((post) => ({
+//     slug: post.slug,
+//   }))
+// }

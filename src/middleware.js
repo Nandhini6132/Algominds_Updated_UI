@@ -7,7 +7,7 @@ export async function customMiddleware(request) {
   const isSignedIn = !!sessionCookie;
   console.log('isSignedIn', isSignedIn);
 
-  const publicPaths = ['/sign-up', '/sign-in'];
+  const publicPaths = ['/sign-up', '/sign-in','/'];
   const protectedPaths = ['/explore', '/innerSection', '/contest', '/problems'];
 
   const requestPath = new URL(request.url).pathname;
