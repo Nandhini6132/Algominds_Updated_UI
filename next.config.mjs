@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    basePath: '/AlgoMindsProb',
-    assetPrefix: '/AlgoMindsProb/',
+    // output: 'export',
+    // basePath: '/AlgoMindsProb',
+    // assetPrefix: '/AlgoMindsProb/',
   };
   
   export default nextConfig;
