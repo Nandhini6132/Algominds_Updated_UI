@@ -5,12 +5,12 @@ import mongoose from 'mongoose';
 
 const connectToDb=async()=>{
     try {
-        await mongoose.connect('mongodb+srv://Nandhini:Elakkiya@cluster0.7ucexvj.mongodb.net/leetcode',{
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-            useCreateIndex: true,
-          })
+        mongoose.connect(process.env.MONGO_URI);
+        const connection = mongoose.connection;
+        connection.once("connected", () => {
+          console.log("MongoDB database connection established successfully");
+        });
+        connection.once("error", (error) => console.log(error,'err from db'));
         console.log('connected to db')
     } catch (error) {
         console.log(error)
