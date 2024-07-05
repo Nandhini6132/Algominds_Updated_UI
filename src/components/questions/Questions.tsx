@@ -184,6 +184,7 @@ const Questions = async () => {
         .map((solution) => solution.userId)
     ).size;
 
+    
     let acceptanceRate =
       totalUsers > 0 ? (usersWithSolution / totalUsers) * 100 : 10;
     let formattedRate = parseFloat(acceptanceRate.toFixed(1));
@@ -222,41 +223,41 @@ const Questions = async () => {
     return { diff, color };
   };
 
-  if (sortOrder === 1) {
-    const sortByDifficulty = (a: any, b: any) => {
-      const difficultyOrder = { Easy: 1, Medium: 2, Hard: 3 };
-      return (
-        difficultyOrder[a.difficulty as keyof typeof difficultyOrder] -
-        difficultyOrder[b.difficulty as keyof typeof difficultyOrder] //3-1 like that
-      );
-    };
+  // if (sortOrder === 1) {
+  //   const sortByDifficulty = (a: any, b: any) => {
+  //     const difficultyOrder = { Easy: 1, Medium: 2, Hard: 3 };
+  //     return (
+  //       difficultyOrder[a.difficulty as keyof typeof difficultyOrder] -
+  //       difficultyOrder[b.difficulty as keyof typeof difficultyOrder] //3-1 like that
+  //     );
+  //   };
 
-    getAll = getAll.sort(sortByDifficulty);
-  }
+  //   getAll = getAll.sort(sortByDifficulty);
+  // }
 
-  if (sortOrder === 2) {
-    const sortByDifficulty = (a: any, b: any) => {
-      const difficultyOrder = { Easy: 3, Medium: 1, Hard: 2 };
-      return (
-        difficultyOrder[a.difficulty as keyof typeof difficultyOrder] -
-        difficultyOrder[b.difficulty as keyof typeof difficultyOrder]
-      );
-    };
+  // if (sortOrder === 2) {
+  //   const sortByDifficulty = (a: any, b: any) => {
+  //     const difficultyOrder = { Easy: 3, Medium: 1, Hard: 2 };
+  //     return (
+  //       difficultyOrder[a.difficulty as keyof typeof difficultyOrder] -
+  //       difficultyOrder[b.difficulty as keyof typeof difficultyOrder]
+  //     );
+  //   };
 
-    getAll = getAll.sort(sortByDifficulty);
-  }
+  //   getAll = getAll.sort(sortByDifficulty);
+  // }
 
-  if (sortOrder === 0) {
-    const sortByDifficulty = (a: any, b: any) => {
-      const difficultyOrder = { Easy: 3, Medium: 2, Hard: 1 };
-      return (
-        difficultyOrder[a.difficulty as keyof typeof difficultyOrder] -
-        difficultyOrder[b.difficulty as keyof typeof difficultyOrder]
-      );
-    };
+  // if (sortOrder === 0) {
+  //   const sortByDifficulty = (a: any, b: any) => {
+  //     const difficultyOrder = { Easy: 3, Medium: 2, Hard: 1 };
+  //     return (
+  //       difficultyOrder[a.difficulty as keyof typeof difficultyOrder] -
+  //       difficultyOrder[b.difficulty as keyof typeof difficultyOrder]
+  //     );
+  //   };
 
-    getAll = getAll.sort(sortByDifficulty);
-  }
+  //   getAll = getAll.sort(sortByDifficulty);
+  // }
 
   console.log(getAll, 'getAll')
   return (

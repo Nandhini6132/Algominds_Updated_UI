@@ -22,7 +22,7 @@ interface userQuestionType {
 
 const ProfilePage = () => {
   const { user } = useClerk();
-  const router=useRouter()
+  const router = useRouter();
 
   const [usersSolution, setUsersSolution] = useState<any[]>([]);
   const [questions, setQuestions] = useState<any[]>([]);
@@ -35,7 +35,7 @@ const ProfilePage = () => {
   useEffect(() => {
     async function getLists() {
       const response = await fetch(
-        `/api/getParticularSolution?id=${user?.fullName || user?.username}`
+        `/api/getParticularSolution?id=${user?.id}`
       );
       const data = await response.json();
 
@@ -63,7 +63,7 @@ const ProfilePage = () => {
       console.log(
         usersSolution
           .map((a: any) => questions.find((b: any) => b._id === a.questionId))
-          .filter((item: any) => item !== undefined)
+          .filter((item: any) => item !== undefined),'iuo'
       );
       const ab = usersSolution
         .map((a: any) => questions.find((b: any) => b._id === a.questionId))
@@ -91,6 +91,9 @@ const ProfilePage = () => {
       icon: <CircleFadingPlus />,
     },
   ];
+
+
+  console.log(userSolvedQuestion,'userSolvedQuestion')
   return (
     <main>
       <div className="h-[90vh]">
@@ -110,7 +113,8 @@ const ProfilePage = () => {
               <div className="flex flex-col gap-5">
                 {menus.map((a: any, i: number) => {
                   return (
-                    <div key={i}
+                    <div
+                      key={i}
                       className="flex gap-4 cursor-pointer"
                       onClick={() => setProfileComponent(a.name)}
                     >
@@ -230,7 +234,9 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="h-[500px] w-[400px] flex items-center justify-end">
-                    <Button onClick={()=>router.push('/problems')}>View All Questions</Button>
+                    <Button onClick={() => router.push("/problems")}>
+                      View All Questions
+                    </Button>
                   </div>
                 </div>
               )}
