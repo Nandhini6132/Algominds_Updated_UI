@@ -147,7 +147,7 @@ const QuestionModal = () => {
             />
           </div>
 
-          {/* <div className="flex">
+          <div className="flex">
             <Label className="flex-1">Difficulty</Label>
             <div className="w-[70%] flex gap-10">
               {["Hard", "Medium", "Easy"].map((category) => {
@@ -178,7 +178,7 @@ const QuestionModal = () => {
                 );
               })}
             </div>
-          </div> */}
+          </div>
           {/* desc */}
           <div className="flex">
             <Label className="flex-1">Description</Label>

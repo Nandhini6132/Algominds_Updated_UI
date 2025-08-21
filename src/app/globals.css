@@ -91,3 +91,22 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
     cursor: col-resize;
 }
+
+.bounce{
+  animation: bounce 5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+  
+}
+
+.difficultyLevelBg{
+  background-image: url(../assets/DlevelBg.png);
+}
+.hoveredBg{
+  background-image: url(../assets/DlevelBg.png) !important;
+  box-shadow: -5px 6px 0px rgb(42, 42, 42);
+  transition: box-shadow 0.1s linear;
+}

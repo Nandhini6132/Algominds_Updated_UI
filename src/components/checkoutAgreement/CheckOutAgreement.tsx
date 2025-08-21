@@ -92,3 +92,7 @@ const CheckOutAgreement = ({ setOpen, open, subsc, userExists, setUserExists, us
 };
 
 export default CheckOutAgreement;
+
+
+
+

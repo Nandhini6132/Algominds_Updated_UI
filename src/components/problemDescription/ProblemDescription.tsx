@@ -5,7 +5,7 @@ const ProblemDescription = () => {
   const { desc }: any = useContext(UserContext);
   console.log(desc, 'desc');
   return (
-    <div className="w-[100%] ">
+    <div className="w-[100%] h-[88%] overflow-y-auto pt-3 font-mono">
       <div>
         <h2>{desc?.questionId}.{desc?.title}</h2>
         <p>{desc?.description}</p>

@@ -29,6 +29,15 @@ interface UserContextType {
 
   category:string | null;
   setCategory: Dispatch<SetStateAction<string | null>>;
+
+  difficulty:string | null;
+  setDifficulty: Dispatch<SetStateAction<string | null>>;
+
+  selectedCategory:string | null;
+  setSelectedCategory: Dispatch<SetStateAction<string | null>>;
+
+  selectedType:string | null;
+  setSelectedType: Dispatch<SetStateAction<string | null>>;
 }
 
 export const UserContext = createContext<UserContextType | null>(null);
@@ -47,6 +56,7 @@ const ContextAPI = ({ children }: { children: ReactNode }) => {
 
   const [openDialogue, setOpenDialogue] = useState(false);
   const [category, setCategory]= useState<string | null>(null)
+  const [difficulty, setDifficulty]= useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<number>(0);
   const [question, setQuestion] = useState({
     title: "",
@@ -63,6 +73,8 @@ const ContextAPI = ({ children }: { children: ReactNode }) => {
     
   });
 
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedType, setSelectedType]=useState<any | null>('');
   //desc
   // const desc = {
   //   title: "Add two numbers",
@@ -94,7 +106,13 @@ const ContextAPI = ({ children }: { children: ReactNode }) => {
         sortOrder,
         setSortOrder,
         category,
-        setCategory
+        setCategory,
+        difficulty,
+        setDifficulty,
+        selectedCategory,
+        setSelectedCategory,
+        selectedType,
+        setSelectedType,
       }}
     >
       {children}

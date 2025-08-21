@@ -48,28 +48,28 @@ const Solution = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-5 pt-3 font-mono">
         {solutions?.map((sol: SolutionType, i) => {
           return (
             <div key={i}>
-              <div className="flex flex-col gap-1 cursor-pointer" onClick={() => setSingleSolution(sol?.userId)}>
+              <div className="flex gap-3 cursor-pointer" onClick={() => setSingleSolution(sol?.userId)}>
                 <div className="flex gap-2">
                   <Avatar
                     src={desc.imageUrl}
-                    style={{ width: "25px", height: "25px" }}
+                    style={{ width: "30px", height: "30px" }}
                   />
-                  <p className="text-slate-900 text-sm">{sol?.userName}</p>
                 </div>
-                <div className="flex flex-col ml-8 gap-1 mb-3">
+                <div className="flex flex-col gap-1 mb-3">
+                  <p className="text-slate-900 text-sm">{sol?.userName}</p>
                 <h1
                   
-                  className="cursor-pointer font-semibold"
+                  className="cursor-pointer"
                 >
                   {desc.title && `${desc.title.charAt(0).toUpperCase()}${desc.title.slice(1)}`}| {desc.difficulty}
                 </h1>
-                <div className="">
+                {/* <div className="">
                   <small className="bg-slate-900 text-white inline-block px-2 py-0 rounded-full align-text-top">Javascript </small>
-                </div>
+                </div> */}
                 </div>
               </div>
               <hr />

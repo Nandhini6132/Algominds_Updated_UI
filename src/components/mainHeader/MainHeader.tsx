@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
-import logo from "@/assets/logoAlgo.png";
+import logo from "@/assets/idea.png";
 import Link from "next/link";
 import { SignIn, useClerk } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
@@ -14,6 +14,9 @@ import QuestionModal from "../questionModal/QuestionModal";
 
 const MainHeader = () => {
   const { signOut, user } = useClerk();
+  const {setSelectedType,selectedType}:any=useContext(UserContext)
+
+
   const header = [
     {
       id: 1,
@@ -22,13 +25,12 @@ const MainHeader = () => {
         //   id: 1,
         //   name: "Explore",
         //   url: "/explore",
-
         // },
-        {
-          id: 2,
-          name: "Problems",
-          url: "/problems",
-        },
+        // {
+        //   id: 2,
+        //   name: "Problems",
+        //   url: "/problems",
+        // },
         // {
         //   id: 3,
         //   name: "Contest",
@@ -37,22 +39,27 @@ const MainHeader = () => {
       ],
 
       profileNavigation: [
+        // {
+        //   id: 1,
+        //   name: <Avatar sx={{ width: "30px", height: "30px" }} />,
+        //   // url: "/profile",
+        //   // click:handleOpens
+        // },
         {
-          id: 1,
-          name: <Avatar sx={{ width: "30px", height: "30px" }} />,
-          url: "/profile",
-          // click:handleOpens
+          id: 2,
+          name: "Home",
+          url: "/problem",
         },
         {
           id: 2,
-          name: "Premium",
+          name: "Pricing",
           url: "/premium",
         },
-        {
-          id: 3,
-          name: "Logout",
-          url: "/sign-out",
-        },
+        // {
+        //   id: 3,
+        //   name: "Logout",
+        //   url: "/sign-out",
+        // },
         // {
         //   id: 4,
         //   name: "notifi",
@@ -83,11 +90,15 @@ const MainHeader = () => {
   };
 
   return (
+
     <div
-      className={` ${path === "/profile" ? "mx-12 my-1" : "container m-auto"}`}
+      className={` ${path === "/profile" || selectedType==='' ? "w-[1360px]" : "container w-[1223px]"} m-auto `}
     >
-      <div className={`flex gap-7 items-center `}>
+      <div className={`flex gap-3 items-center border-b-2 pb-3 mt-3 border-black border-opacity-10`}>
         <Image src={logo} alt="logo" width={50} />
+        <span className="font-mono font-semibold text-xl -tracking-tighter">
+          AlgoMinds
+        </span>
         {(path === "/problems" ||
           path === "/explore" ||
           path === "/contest" ||
@@ -95,8 +106,9 @@ const MainHeader = () => {
           path === "/" ||
           path === "/premium" ||
           isDynamicPath(path)) && (
-          <div className={`flex w-full`}>
-            {header.map((name, i) => {
+            <div className={`flex ml-10`}>
+              {isAdmin && <button onClick={handleOpen}>Add question</button>}
+              {/* {header.map((name, i) => {
               return (
                 <>
                   <div className="flex gap-8" key={i}>
@@ -109,30 +121,61 @@ const MainHeader = () => {
                   </div>
                 </>
               );
-            })}
-          </div>
-        )}
+            })} */}
+            </div>
+          )}
 
-        <div className={`${path!=='/problems' && 'flex w-full justify-end'}`}>
-          {header.map((name, i) => (
-            <>
-              <div className="flex gap-7">
-                {name.profileNavigation?.map((name, i) => (
-                  <Link key={i}
-                    href={`${name.url}`}
-                    onClick={(e) => name.url === "/sign-out" && handleLogout(e)}
-                  >
-                    {name.name}
-                  </Link>
-                ))}
-              </div>
-            </>
-          ))}
+        <div className="ml-auto flex items-center gap-20">
+          <div
+            className={` ${path !== "/problems" && "flex w-full justify-end"}`}
+          >
+            {header.map((name, i) => (
+              <>
+                <div className={`flex gap-20`}>
+                  {name.profileNavigation?.map((name, i) => (
+                    <div>
+                      <Link
+                        key={i}
+                        className={`relative ${path === name?.url ? "font-bold pb-0.5" : ""
+                          }`}
+                        href={`${name.url}`}
+                        onClick={(e) =>
+                          { setSelectedType('')
+                            name.url === "/sign-out" && handleLogout(e)
+                          }
+                        }
+                        style={{
+                          position: "relative",
+                          textDecoration: "none",
+                          color: "inherit",
+                        }}
+                      >
+                        {name.name}
+                        <span
+                          className="absolute left-0 -bottom-1 w-0 h-0 bg-black transition-all duration-300"
+                          style={{
+                            height: path === name?.url ? "4px" : "3px",
+                            width: path === name?.url ? "100%" : "3px",
+                            borderRadius: path !== name?.url ? '100%' : ''
+                          }}
+                        ></span>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ))}
+          </div>
+
+          <div className="border-l-2 pl-16 border-black border-opacity-15">
+            <Avatar sx={{ width: "30px", height: "30px" }} />
+          </div>
         </div>
 
         {open && <QuestionModal />}
       </div>
     </div>
+
   );
 };
 

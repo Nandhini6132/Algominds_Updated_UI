@@ -1,20 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogDescription,
-  DialogHeader,
   DialogFooter,
 } from "../ui/dialog";
-import { CircleX, Cross, ShoppingCart } from "lucide-react";
-// import { Checkbox } from "../ui/checkbox";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
-import { FaGooglePay } from "react-icons/fa";
-import { Input } from "../ui/input";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe("pk_test_51PhsYnRpatdBPlBe2rrdMz2wWxhWBpwu2fHrPeIh8rGC48vHqlCGSEeXahpDu15jHUruuMGhzS5fvKjk3fHAqNME00AJaf70TB");
+
+const CheckoutForm = ({ subsc, handleUpdatePremium }:any) => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (event:any) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const card = elements.getElement(CardElement);
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    if (!error) {
+      handleUpdatePremium(paymentMethod.id);
+    } else {
+      console.error(error);
+      toast.error("Payment failed. Please try again.");
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <CardElement />
+      <Button type="submit" disabled={!stripe}>Pay Now</Button>
+    </form>
+  );
+};
 
 const CheckOutBill = ({
   isCheckOut,
@@ -24,62 +57,44 @@ const CheckOutBill = ({
   setUserExists,
   userSubscriptionPlan,
   setUserSubscriptionPlan,
-}: any) => {
+}:any) => {
   const { user } = useClerk();
   const router = useRouter();
-  const [upi, setUPI] = useState("");
 
-  const handleUpdatePremium = async () => {
+  const handleUpdatePremium = async (paymentMethodId:any) => {
     const premiumUpdate = {
       name: user?.username || user?.fullName,
       email: user?.emailAddresses?.[0].emailAddress || user?.emailAddresses,
       isPremium: true,
-      isSubscribedMonthly: subsc.plan === "Monthly" ? true : false,
-      isSubscribedYearly: subsc.plan === "Yearly" ? true : false,
+      isSubscribedMonthly: subsc.plan === "Monthly",
+      isSubscribedYearly: subsc.plan === "Yearly",
+      paymentMethodId,
     };
-    try {
-      if(userExists){
-        const response= await fetch(`/api/postPremiumMethod?email=${user?.emailAddresses[0]?.emailAddress || user?.emailAddresses}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(premiumUpdate),
-        })
 
-        const result= await response.json()
-        console.log(result);
-        if (result?.success) {
-          setTimeout(() => {
-            setIsCheckOut(false);
-            router.push("/");
-          }, 2000);
-        }
+    try {
+      const response = await fetch(`/api/postPremiumMethod?email=${user?.emailAddresses}`, {
+        method: userExists ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(premiumUpdate),
+      });
+
+      const result = await response.json();
+      console.log(result, 'result')
+      if (result?.success) {
+        setTimeout(() => {
+          setIsCheckOut(false);
+          router.push("/");
+        }, 2000);
+      } else {
+        toast.error("Failed to update premium status.");
       }
-      else{
-        const response = await fetch(`api/postPremiumMethod`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...premiumUpdate, premiumUpdate }),
-        });
-        const result = await response.json();
-        console.log(result);
-        if (result?.success) {
-          setTimeout(() => {
-            setIsCheckOut(false);
-            router.push("/");
-          }, 2000);
-        }
-      }
-    
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error("An error occurred. Please try again.");
     }
   };
-
-
 
   useEffect(() => {
     async function getPremiumUser() {
@@ -95,7 +110,6 @@ const CheckOutBill = ({
         );
 
         const result = await response.json();
-        console.log(result.data, "result");
         if (result.data.length > 0) {
           setUserExists(true);
           setUserSubscriptionPlan(result.data[0]);
@@ -103,12 +117,11 @@ const CheckOutBill = ({
           setUserExists(false);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
     getPremiumUser();
   }, [user]);
-
 
   return (
     <>
@@ -154,76 +167,30 @@ const CheckOutBill = ({
                         .00
                       </h6>
                     </div>
-
-                    <div className="flex my-3 justify-between">
-                      <h6 className="text-sm">GST</h6>
-                      <h6>0</h6>
-                    </div>
-
-                    <div className="flex justify-between mt-16">
-                      <h6>Order Total</h6>
-                      <h6 className="text-2xl font-semibold">
-                        &#8377;
-                        {subsc?.plan === "Yearly"
-                          ? subsc?.dollar * 12
-                          : subsc?.dollar}
-                        .00
-                      </h6>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="w-[60%]">
-              <div>
-                <div>
-                  <h1 className="font-semibold">Payment Method</h1>
+              <div className="flex flex-col gap-3">
+                <div className="text-base font-semibold">
+                  Select Payment method
                 </div>
 
-                <div>
-                  <FaGooglePay className="text-5xl" />
-                </div>
-
-                <div className="mt-4">
-                  <h2>Please fill in your billing information</h2>
-                  <div className="flex gap-8 mt-3">
-                    <Input placeholder="First Name" required />
-                    <Input placeholder="Last Name" required />
-                  </div>
-                  <div className="mt-4">
-                    <Input
-                      value={
-                        user?.emailAddresses?.[0]?.emailAddress ||
-                        "user@gmail.com"
-                      }
-                      readOnly
-                    />
-                  </div>
-
-                  <div className="mt-5">
-                    <h6>Please enter your UPI id </h6>
-                    <Input
-                      placeholder="UPI id"
-                      required
-                      value={upi}
-                      onChange={(e) => setUPI(e.target.value)}
-                    />
-                  </div>
-                  <DialogFooter className="flex align-end mt-5">
-                    <Button
-                      className=""
-                      disabled={upi === ""}
-                      onClick={() => {
-                        handleUpdatePremium();
-                      }}
-                    >
-                      Check out
-                    </Button>
-                  </DialogFooter>
+                <div className="flex flex-col gap-4">
+                  <Elements stripe={stripePromise}>
+                    <CheckoutForm subsc={subsc} handleUpdatePremium={handleUpdatePremium} />
+                  </Elements>
                 </div>
               </div>
             </div>
           </div>
+
+          <DialogFooter className="flex justify-end mt-3">
+            <Button className="px-7" onClick={() => setIsCheckOut(false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
@@ -231,3 +198,5 @@ const CheckOutBill = ({
 };
 
 export default CheckOutBill;
+
+

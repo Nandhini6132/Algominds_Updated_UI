@@ -13,10 +13,10 @@ const postQuestionSchema = new mongoose.Schema(
             required: true
         },
 
-        // difficulty: {
-        //     type: String,
-        //     required: true
-        // },
+        difficulty: {
+            type: String,
+            required: true
+        },
         questionId: {
             type: Number,
             required: true

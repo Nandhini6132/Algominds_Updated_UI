@@ -13,13 +13,20 @@ import Solution from "@/components/solution/Solution";
 import Discussion from "@/components/discussion/Discussion";
 import { AlignJustifyIcon, ArrowLeft, Dot, PlayIcon } from "lucide-react";
 
-
 function ProblemId() {
   const { desc } = useContext(UserContext);
   const { user } = useClerk();
   const { id } = useParams();
   const [cases, setCases] = useState(0);
-  console.log(cases, "cases");
+  const [isDiscussion, setIsDiscussion] = useState(false)
+  const [isDescription, setIsDescription] = useState(true)
+  const [isSolution, setIsSolution] = useState(false)
+  const [openSection, setOpenSection] = useState(null)
+
+  const toggleSection = (section) => {
+    setOpenSection(openSection === section ? null : section); 
+  };
+  console.log(cases, id, desc, "cases");
 
   const [answer, setAnswer] = useState({
     userId: "",
@@ -35,7 +42,7 @@ function ProblemId() {
   const [case1, setCase1] = useState(false);
   const [case2, setCase2] = useState(false);
   const [case3, setCase3] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const parseInputVariables = (input) => {
     console.log(typeof input, input, "input");
@@ -54,7 +61,7 @@ function ProblemId() {
       const value = variable.split("=")[1].trim();
       console.log(value, "value from line 25", typeof value);
       try {
-        if ((value.startsWith('[')) && (value.endsWith(']'))) {
+        if (value.startsWith("[") && value.endsWith("]")) {
           return JSON.parse(value);
         }
         return JSON.parse(value);
@@ -125,16 +132,14 @@ function ProblemId() {
           }`
         );
 
-
-        console.log(result, "result")
+        console.log(result, "result");
         switch (index) {
           case 0:
             setOutput1(result);
             if (JSON.stringify(result) == JSON.stringify(testCase.output[0])) {
-
-              console.log('Test Case 1 Passed');
+              console.log("Test Case 1 Passed");
             } else {
-              console.log('Test Case 1 Failed');
+              console.log("Test Case 1 Failed");
             }
             break;
           case 1:
@@ -153,13 +158,13 @@ function ProblemId() {
             console.log("Unexpected test case index");
         }
 
-        console.log(case1, case2, case3)
+        console.log(case1, case2, case3);
 
         setCase1(false);
         setCase2(false);
         setCase3(false);
 
-        console.log(case1, case2, case3)
+        console.log(case1, case2, case3);
         if (JSON.stringify(result) != testCase.output) {
           setSubmit(false);
           allTestsPassed = false;
@@ -169,14 +174,12 @@ function ProblemId() {
             { autoClose: 3000 }
           );
 
-          console.log(output1, result, "output")
-
+          console.log(output1, result, "output");
 
           setOutput(JSON.stringify(result));
-
         }
         console.log(output1, output2, output3);
-        setOutput('')
+        setOutput("");
       });
 
       if (allTestsPassed) {
@@ -209,10 +212,12 @@ function ProblemId() {
     const result = await response.json();
     console.log(result);
     toast.success(result.message, {
-      autoClose: 1000
+      autoClose: 1000,
     });
 
-    setTimeout(() => { router.back() }, 2000)
+    setTimeout(() => {
+      router.back();
+    }, 2000);
   };
   const renderSection = () => {
     switch (currentSection) {
@@ -250,24 +255,171 @@ function ProblemId() {
   }
 
   console.log(output1, output2, output3);
-  
-
-
 
   return (
-    <main className="mt-2 border-y-4">
-      <ToastContainer />
+    <div className="flex gap-8 font-mono">
+      <div className="w-[74.5%]">
+        <main className="border-2 border-black">
+          <ToastContainer />
 
-      <div className="absolute top-2.5 left-[20%] bg-gray-200 rounded py-1.5 px-2 flex gap-1 cursor-pointer" onClick={()=>router.push('/problems')}>
+          {/* <div className="absolute top-2.5 left-[20%] bg-gray-200 rounded py-1.5 px-2 flex gap-1 cursor-pointer" onClick={()=>router.push('/problems')}>
         <AlignJustifyIcon className="text-gray-700 w-5"/>
         <h4>Problem list</h4>
-      </div>
-      <div className="absolute top-2.5 left-[45%] flex gap-1"> 
+      </div> */}
+
+          <div className="h-full">
+            {/* playground */}
+            <div className="w-[100%] h-[100%]">
+              <div className="border-b-[1px] border-black border-opacity-20">
+                <CodeMirror
+                  value={code}
+                  height="490px"
+                  width="100%"
+                  borderBottom='1px solid black'
+                  theme={vscodeLight}
+                  onChange={(value) => setCode(value)}
+                />
+              </div>
+              <div className="h-14 flex flex-col justify-center mr-3">
+                <div className="flex gap-8 justify-end">
+                  <button
+                    onClick={handleRunCode}
+                    className="pt-1.5 pb-1.5 pe-2.5 ps-2.5  bg-black text-white flex"
+                  >
+                    {" "}
+                    {/* <span>
+                  <PlayIcon
+                    className="stroke-none rounded-icon w-5"
+                    style={{ fill: "gray", strokeLinecap: "round" }}
+                  />
+                </span> */}
+                    Run Code
+                  </button>
+
+                  <pre>
+                    <button
+                      onClick={handleSubmit}
+                      disabled={filteredSolution}
+                      className="bg-black text-white pt-1.5 pb-1.5 pe-2.5 ps-2.5"
+                      style={{
+                        pointerEvents: filteredSolution ? "not-allowed" : "auto",
+                        cursor: filteredSolution ? "not-allowed" : "pointer",
+                        // opacity: filteredSolution && 0.8,
+                      }}
+                    >
+                      Submit
+                    </button>
+                  </pre>
+
+                </div>
+              </div>
+              {/* <div className="border-2  border-slate-200 h-[50%] ps-3 overflow-auto">
+            {submit && <h5 className="font-bold text-green-800">Accepted</h5>}
+            <div className="flex gap-8">
+              {["Case 1", "Case 2", "Case 3"].map((test, index) => (
+                <div key={index}>
+                  <h3
+                    className={`cursor-pointer hover:bg-slate-200 px-3 py-1 rounded-md mt-3 ${
+                      cases === index && "bg-slate-200"
+                    }`}
+                    onClick={() => setCases(index)}
+                  >
+                    {" "}
+                    <span className="flex">
+                      <Dot
+                        className={`${
+                          !submit && "hidden"
+                        } text-green-900 font-bold`}
+                      />{" "}
+                      {test}
+                    </span>
+                  </h3>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 ">
+              <h6 className="text-gray-500">Input:</h6>
+              <div className="bg-slate-200 h-14 rounded mr-7 px-2 py-3">
+                {cases === 0 ? (
+                  <>
+                    <h5>{desc.input.split("")}</h5>
+                  </>
+                ) : cases === 1 ? (
+                  <h5>{desc.input2}</h5>
+                ) : (
+                  <h5>{desc.input3}</h5>
+                )}
+              </div>
+
+              <h6 className="text-gray-500">Expected:</h6>
+              <div className="bg-slate-200 h-14 rounded mr-7 px-2 py-3">
+                {cases === 0 ? (
+                  <>
+                    <h5>{desc.output}</h5>
+                  </>
+                ) : cases === 1 ? (
+                  <h5>{desc.output2}</h5>
+                ) : (
+                  <h5>{desc.output3}</h5>
+                )}
+              </div>
+              {console.log(desc.output, output1, output)}
+
+              <h6 className="text-gray-500">Output:</h6>
+              <div className="bg-slate-200 h-14 rounded mr-7 px-2 py-3">
+                {cases === 0 ? (
+                  <h5
+                    className={`font-bold ${
+                      output1 === desc.output
+                        ? "text-green-600"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {submit ? desc.output : output1 || output}
+                  </h5>
+                ) : cases === 1 ? (
+                  <h5
+                    className={`font-bold ${
+                      output2 == desc.output2
+                        ? "text-green-600"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {submit ? desc.output2 : output2 || output}
+                  </h5>
+                ) : (
+                  <h5
+                    className={`font-bold ${
+                      output3 == desc.output3
+                        ? "text-green-600"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {submit ? desc.output3 : output3 || output}
+                  </h5>
+                )}
+              </div>
+            </div>
+
+            {console.log(filteredSolution)}
+          </div> */}
+            </div>
+          </div>
+
+
+
+          {/* <div className="absolute top-2.5 left-[45%] flex gap-1">
         <button
           onClick={handleRunCode}
           className="pt-1.5 pb-1.5 pe-2.5 ps-2.5  bg-gray-200 rounded flex"
-
-        > <span><PlayIcon className="stroke-none rounded-icon w-5" style={{fill:'gray', strokeLinecap:'round'}}/></span>
+        >
+          {" "}
+          <span>
+            <PlayIcon
+              className="stroke-none rounded-icon w-5"
+              style={{ fill: "gray", strokeLinecap: "round" }}
+            />
+          </span>
           Run Code
         </button>
         {submit ? (
@@ -276,7 +428,6 @@ function ProblemId() {
               onClick={handleSubmit}
               disabled={filteredSolution}
               className="bg-gray-200 text-green-900 pt-1.5 pb-1.5 pe-2.5 ps-2.5 font-bold font-sans  rounded cursor-pointer "
-
               style={{
                 pointerEvents: filteredSolution ? "none" : "auto",
                 cursor: filteredSolution ? "none" : "pointer",
@@ -325,36 +476,36 @@ function ProblemId() {
 
           <div className="px-3 mt-5 h-[100%]">{renderSection()}</div>
         </div>
+      </div> */}
+        </main>
 
-        {/* playground */}
-        <div className="w-[50%] border-x-2 h-[100%]">
-          <CodeMirror
-            value={code}
-            height="400px"
-            width="100%"
-            theme={vscodeLight}
-            onChange={(value) => setCode(value)}
-          />
-
-          <div className="border-2  border-slate-200 h-[50%] ps-3 overflow-auto">
-            {submit && <h5 className="font-bold text-green-800">Accepted</h5>}
+        <div className="bg-black mt-4 p-3 overflow-auto">
+          {/* {submit && <h5 className="font-bold text-green-800">Accepted</h5>} */}
+          <div className="flex justify-between flex-row-reverse text-white border-b-[1px] border-slate-600 pb-5">
             <div className="flex gap-8">
               {["Case 1", "Case 2", "Case 3"].map((test, index) => (
                 <div key={index}>
                   <h3
-                    className={`cursor-pointer hover:bg-slate-200 px-3 py-1 rounded-md mt-3 ${cases === index && "bg-slate-200"
+                    className={`cursor-pointer hover:bg-white hover:text-black pr-2 pl-1 py-1 ${cases === index && "bg-white text-black"
                       }`}
                     onClick={() => setCases(index)}
                   >
                     {" "}
-                    <span className="flex"><Dot className={`${!submit && 'hidden'} text-green-900 font-bold`} /> {test}</span>
+                    <span className={`flex`}>
+                      <span className={` w-2 h-2 rounded-full bg-green ${!submit && "hidden"
+                        }`}></span>
+                      {test}
+                    </span>
                   </h3>
                 </div>
               ))}
             </div>
-            <div className="mt-3 ">
-              <h6 className="text-gray-500">Input:</h6>
-              <div className="bg-slate-200 h-14 rounded mr-7 px-2 py-3">
+            <div className="bg-white bg-opacity-10  px-3 py-1"><p>Output</p></div>
+          </div>
+          <div className="mt-3 px-8 flex flex-col gap-7">
+            <div className="flex gap-10">
+              <h6 className="text-gray-500 w-14">Input:</h6>
+              <div className=" text-white">
                 {cases === 0 ? (
                   <>
                     <h5>{desc.input.split("")}</h5>
@@ -365,9 +516,11 @@ function ProblemId() {
                   <h5>{desc.input3}</h5>
                 )}
               </div>
+            </div>
 
-              <h6 className="text-gray-500">Expected:</h6>
-              <div className="bg-slate-200 h-14 rounded mr-7 px-2 py-3">
+            <div className="flex gap-10">
+              <h6 className="text-gray-500 w-14">Expected:</h6>
+              <div className="text-white">
                 {cases === 0 ? (
                   <>
                     <h5>{desc.output}</h5>
@@ -378,42 +531,76 @@ function ProblemId() {
                   <h5>{desc.output3}</h5>
                 )}
               </div>
-              {console.log(desc.output, output1, output)}
+            </div>
+            {console.log(desc.output, output1, output)}
 
-              <h6 className="text-gray-500">Output:</h6>
-              <div className="bg-slate-200 h-14 rounded mr-7 px-2 py-3">
+            <div className="flex gap-10">
+              <h6 className="text-gray-500 w-14">Output:</h6>
+              <div className="text-green-600">
                 {cases === 0 ? (
-
                   <h5
-                    className={`font-bold ${output1 === desc.output ? "text-green-600"
-                      : "text-red-500"
-                      }`}
+                    className={`font-bold`}
                   >
                     {submit ? desc.output : output1 || output}
                   </h5>
-
                 ) : cases === 1 ? (
-                  <h5 className={`font-bold ${output2 == desc.output2 ? "text-green-600"
-                    : "text-red-500"
-                    }`}>
+                  <h5
+                    className={`font-bold`}
+                  >
                     {submit ? desc.output2 : output2 || output}
                   </h5>
                 ) : (
-                  <h5 className={`font-bold ${output3 == desc.output3 ? "text-green-600"
-                    : "text-red-500"
-                    }`}>
+                  <h5
+                    className={`font-bold`}
+                  //  ${output3 == desc.output3
+                  //   ? "text-green-600"
+                  //   : "text-red-500"
+                  //   }
+
+                  >
                     {submit ? desc.output3 : output3 || output}
                   </h5>
                 )}
               </div>
             </div>
-
-            {console.log(filteredSolution)}
-
           </div>
+
+          {console.log(filteredSolution)}
         </div>
       </div>
-    </main>
+
+
+      {/* right section */}
+      <div className="w-[22%] flex flex-col gap-4 h-full">
+
+        {/* Discussion */}
+        <div className={`border-[1px] px-3 py-3 ${openSection === 'discussion' ? 'h-[30%]' : ''} cursor-pointer`}>
+          <div className={`flex justify-between ${openSection === 'discussion' ? 'border-b-[1px] pb-3' : ''}`} onClick={() => toggleSection('discussion')}>
+            <h1 className={`inline-block ${openSection==='discussion'?'bg-black text-white':'bg-[#f6f6f6] text-black'}  px-3 py-2 tracking-widest  w-32 text-center`}>Discussion</h1>
+            
+          </div>
+          {openSection === 'discussion' && <Discussion />}
+        </div>
+
+        {/* Description */}
+        <div className={`border-[1px] px-3 py-3 ${openSection === 'description' ? 'h-[615px]' : ''} cursor-pointer`}>
+          <div className={`flex justify-between ${openSection === 'description' ? 'border-b-[1px] pb-3' : ''}`} onClick={() => toggleSection('description')}>
+            <h1  className={`inline-block ${openSection==='description'?'bg-black text-white':'bg-[#f6f6f6] text-black'}  px-3 py-2 tracking-widest  w-32 text-center`}>Description</h1>
+            
+          </div>
+          {openSection === 'description' && <ProblemDescription />}
+        </div>
+
+        {/* Solution */}
+        <div className={`border-[1px] px-3 py-3 ${openSection === 'solution' ? 'h-[30%]' : ''} cursor-pointer`}>
+          <div className={`flex justify-between ${openSection === 'solution' ? 'border-b-[1px] pb-3' : ''}`} onClick={() => toggleSection('solution')}>
+            <h1 className={`inline-block ${openSection==='solution'?'bg-black text-white':'bg-[#f6f6f6] text-black'}  px-3 py-2 tracking-widest  w-32 text-center`}>Solution</h1>
+            
+          </div>
+          {openSection === 'solution' && <Solution />}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -421,7 +608,7 @@ export default ProblemId;
 
 // export async function generateStaticParams() {
 //   const posts = await fetch(`https:/localhost:3000/problems/${slug}`).then((res) => res.json())
- 
+
 //   return posts.map((post) => ({
 //     slug: post.slug,
 //   }))

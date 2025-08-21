@@ -18,6 +18,7 @@ interface userQuestionType {
   _id: string;
   category: string;
   questionId: number;
+  difficulty: string;
 }
 
 const ProfilePage = () => {
@@ -63,7 +64,7 @@ const ProfilePage = () => {
       console.log(
         usersSolution
           .map((a: any) => questions.find((b: any) => b._id === a.questionId))
-          .filter((item: any) => item !== undefined),'iuo'
+          .filter((item: any) => item !== undefined), 'iuo'
       );
       const ab = usersSolution
         .map((a: any) => questions.find((b: any) => b._id === a.questionId))
@@ -93,10 +94,10 @@ const ProfilePage = () => {
   ];
 
 
-  console.log(userSolvedQuestion,'userSolvedQuestion')
+  console.log(userSolvedQuestion, 'userSolvedQuestion')
   return (
-    <main>
-      <div className="h-[90vh]">
+    <main className="ml-8">
+      {/* <div className="h-[90vh]">
         <div className="flex gap-12 h-[100%] border-slate-400 border-t-2">
           <div className="w-[12%] border-2 border-s-transparent border-y-transparent border-e-slate-400 pt-7">
             <div className="px-2 flex flex-col gap-5">
@@ -152,10 +153,10 @@ const ProfilePage = () => {
                                 index % 2 === 0 ? "bg-gray-100" : "bg-white"
                               } hover:bg-gray-100`}
                             >
-                              <td className="flex justify-center py-3">
+                              <th className="flex justify-center py-3">
                                 <CircleCheckBig className="text-green-600" />
-                              </td>
-                              <td>
+                              </th>
+                              <th>
                                 {" "}
                                 <Link
                                   onClick={() => fetchQuestion(a._id)}
@@ -166,10 +167,10 @@ const ProfilePage = () => {
                                   </span>
                                   <span className="text-start">{a.title}</span>
                                 </Link>
-                              </td>
-                              <td className="flex justify-center ">
+                              </th>
+                              <th className="flex justify-center ">
                                 {a.category}
-                              </td>
+                              </th>
                             </tr>
                           </>
                         )
@@ -243,7 +244,33 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      <table className="w-full border-[1px]">
+        <thead>
+          <tr className="bg-[#F6F6F6] h-11">
+            <th className="pl-12 text-start w-[50%]">Title</th>
+            <th className="text-start w-[30%]">Category</th>
+            <th className="text-start w-[20%]">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userSolvedQuestion?.map((solved, index) => (
+            <tr key={index} className={`h-11 hover:bg-[#f6f6f6] cursor-pointer`}>
+              <td className="pl-12">{solved?.title}</td>
+              <td>{solved?.category}</td>
+              <td className="text-center pl-5"><span className={`w-1.5 h-1.5 rounded-full block`} style={{
+                background:
+                  solved?.difficulty === 'Hard' ? 'red' :
+                    solved?.difficulty === 'Medium' ? 'rgb(245 158 11)' :
+                      solved?.difficulty === 'Easy' ? 'green' :
+                        'transparent'
+              }} ></span></td>
+            </tr>
+          ))}
+        </tbody>
+
+      </table>
     </main>
   );
 };

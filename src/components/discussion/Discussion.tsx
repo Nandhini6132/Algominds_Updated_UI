@@ -55,28 +55,37 @@ const Discussion = () => {
   }
 
   return (
-    <div className="h-[83%] relative overflow-auto">
+    <div className=" relative overflow-auto max-h-[540px] pt-3 font-mono">
       <div className="flex flex-col gap-5">
         {discussions && discussions.length > 0 ? (
           discussions.map((disc: DiscussionData, index) => (
-            <div key={index}>
-             <div className="flex items-center gap-3"> <Avatar/> <p>{disc.userName}</p></div>
-            <h3 key={index} className="ml-12">{disc.discussion}</h3>
-            <div><hr/></div>
+            <div key={index} className="flex flex-col gap-2">
+              <div className="flex items-center gap-3">
+                {" "}
+                <Avatar />
+                <div>
+                  <p>{disc.userName}</p>
+                  <h3 key={index} className="">
+                    {disc.discussion}
+                  </h3>
+                </div>
+                <div></div>
+              </div>
+                <hr />
             </div>
           ))
         ) : (
           <p>No discussions</p>
         )}
       </div>
-      <div className={`fixed bottom-[80px] flex w-[45%] gap-10 ml-8`}>
+      {/* <div className={`flex w-[45%] gap-10 ml-8`}>
         <Input
           type="text"
           value={discussion}
           onChange={(e) => setDiscussion(e.target.value)}
         />
         <Button onClick={handlePostDiscussion}>Post query</Button>
-      </div>
+      </div> */}
     </div>
   );
 };
