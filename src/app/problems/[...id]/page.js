@@ -57,7 +57,7 @@ function ProblemId() {
   const parseInputValues = (input) => {
     if (!input) return [];
 
-    const values = input.split(";").map((variable) => {
+    const values = input.split(";")?.map((variable) => {
       const value = variable.split("=")[1].trim();
       console.log(value, "value from line 25", typeof value);
       try {

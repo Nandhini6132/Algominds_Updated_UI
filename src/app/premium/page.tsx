@@ -188,7 +188,7 @@ const PremiumPage = () => {
 
         <div>
           <div className="flex justify-between  items-center ">
-            {subscriptionDetails.map((subsc, index) => (
+            {subscriptionDetails?.map((subsc, index) => (
               <Card
                 className={`flex flex-col justify-between rounded-none hover:border-[1px] py-3 hover:border-black shadow-none hover:shadow-[-5px_6px_0px_rgba(0,0,0)] transition-all duration-100 cursor-pointer`}
                 onMouseEnter={() => setHoveredIndex(index)}

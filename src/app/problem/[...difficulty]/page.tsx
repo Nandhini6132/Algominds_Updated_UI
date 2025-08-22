@@ -74,7 +74,7 @@ const Page = () => {
   }, [category, difficultyLevel]);
 
   const uniqueCategories = Array.from(
-    new Set(allQuestion.map((q) => q.category))
+    new Set(allQuestion?.map((q) => q.category))
   );
 
   console.log(uniqueCategories, "unique");
@@ -107,7 +107,7 @@ const Page = () => {
       });
       const result = await response.json();
       console.log(result);
-      const a = result.data.map((a: any) => a?.userId);
+      const a = result?.data?.map((a: any) => a?.userId);
       console.log(a);
       const newS = Array.from(new Set(a)) as string[];
       setNumberOfUsers(newS);
@@ -218,7 +218,7 @@ const Page = () => {
           ) : (
             <div className="flex gap-8 ml-10 flex-wrap">
               {difficultyLevel === "Easy" &&
-                uniqueCategories.map((category, i) => (
+                uniqueCategories?.map((category, i) => (
                   <div
                     key={category}
                     className={`w-[280px] h-[130px] bg-[#F6F6F6] flex flex-col gap-3 p-3 hover:border-[1px] hover:border-black cursor-pointer ${i === isHovered ? "hoveredBg" : ""
@@ -247,7 +247,7 @@ const Page = () => {
                   </div>
                 ))}
               {difficultyLevel === "Medium" &&
-                uniqueCategories.map((category, i) => (
+                uniqueCategories?.map((category, i) => (
                   <div
                     key={category}
                     className={`w-[280px] h-[130px] bg-[#F6F6F6] flex flex-col gap-3 p-3 hover:border-[1px] hover:border-black cursor-pointer ${i === isHovered ? "hoveredBg" : ""
@@ -276,7 +276,7 @@ const Page = () => {
                   </div>
                 ))}
               {difficultyLevel === "Hard" &&
-                uniqueCategories.map((category, i) => (
+                uniqueCategories?.map((category, i) => (
                   <div
                     key={category}
                     className={`w-[280px] h-[130px] bg-[#F6F6F6] flex flex-col gap-3 p-3 hover:border-[1px] hover:border-black cursor-pointer ${i === isHovered ? "hoveredBg" : ""

@@ -73,7 +73,7 @@ const ProblemPage = () => {
   return (
     <main className="p-4  w-[50%] m-auto">
       <div className="flex gap-6 mb-7">
-        {options.map(({ category, count }) => {
+        {options?.map(({ category, count }) => {
           return (
             <Link href={""} key={count}>
               {" "}
